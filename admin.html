@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOEIC Admin - Nhập Liệu Đề Thi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --border: #e2e8f0;
+            --text: #1e293b;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Roboto Serif', serif; }
+        body { background: var(--bg); color: var(--text); padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        h1, h2, h3 { margin-bottom: 15px; color: var(--primary); }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: 500; font-size: 14px; }
+        input[type="text"], input[type="number"], select, textarea { 
+            width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 14px; 
+            font-family: inherit;
+        }
+        textarea { resize: vertical; min-height: 80px; }
+        .flex-row { display: flex; gap: 15px; }
+        .flex-row .form-group { flex: 1; }
+        .btn { padding: 10px 15px; background: var(--primary); color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; }
+        .btn:hover { background: #4338ca; }
+        .btn-danger { background: #ef4444; }
+        .btn-success { background: #10b981; }
+        
+        .question-list { max-height: 700px; overflow-y: auto; }
+        .q-item { border: 1px solid var(--border); padding: 10px; margin-bottom: 10px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; }
+        .q-item-details { flex: 1; }
+        
+        .export-section { margin-top: 20px; }
+        #export-code { width: 100%; height: 200px; background: #1e293b; color: #10b981; padding: 15px; font-family: monospace; font-size: 13px; border-radius: 4px; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div style="max-width: 1200px; margin: 0 auto; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+        <h1>Công cụ Nhập liệu Đề thi TOEIC</h1>
+        <a href="index.html" class="btn">Trở về Trang Thi</a>
+    </div>
+
+    <div class="container">
+        <!-- Input Form -->
+        <div class="card">
+            <h2>Thêm / Sửa Câu Hỏi</h2>
+            <form id="q-form">
+                <div class="flex-row">
+                    <div class="form-group">
+                        <label>ID (Số thứ tự câu)*</label>
+                        <input type="number" id="qId" required min="1" max="200">
+                    </div>
+                    <div class="form-group">
+                        <label>Part (1-7)*</label>
+                        <select id="qPart" required>
+                            <option value="1">Part 1 (6 câu)</option>
+                            <option value="2">Part 2 (25 câu)</option>
+                            <option value="3">Part 3 (39 câu)</option>
+                            <option value="4">Part 4 (30 câu)</option>
+                            <option value="5">Part 5 (30 câu)</option>
+                            <option value="6">Part 6 (16 câu)</option>
+                            <option value="7">Part 7 (54 câu)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex-row">
+                    <div class="form-group">
+                        <label>Group ID (Nhóm câu hỏi chung đoạn văn/audio)</label>
+                        <input type="text" id="qGroupId" placeholder="VD: p3_g1 hoặc p7_g1">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Nội dung câu hỏi (Question Text)*</label>
+                    <input type="text" id="qText" value="Mark your answer on your answer sheet." required>
+                </div>
+
+                <div class="flex-row">
+                    <div class="form-group">
+                        <label>Hình ảnh riêng (Part 1)</label>
+                        <input type="text" id="qImage" placeholder="media/part1_q1.jpg">
+                    </div>
+                    <div class="form-group">
+                        <label>Hình ảnh chung (Part 3,4,7)</label>
+                        <input type="text" id="qGroupImage" placeholder="media/part3_g1.jpg">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Đoạn văn (Passage HTML - Part 6,7)</label>
+                    <textarea id="qPassage" placeholder="<p>Dear Sir...</p>"></textarea>
+                </div>
+
+                <div class="flex-row">
+                    <div class="form-group">
+                        <label>Đáp án A</label>
+                        <input type="text" id="optA" value="(A)">
+                    </div>
+                    <div class="form-group">
+                        <label>Đáp án B</label>
+                        <input type="text" id="optB" value="(B)">
+                    </div>
+                </div>
+                <div class="flex-row">
+                    <div class="form-group">
+                        <label>Đáp án C</label>
+                        <input type="text" id="optC" value="(C)">
+                    </div>
+                    <div class="form-group">
+                        <label>Đáp án D</label>
+                        <input type="text" id="optD" value="(D)">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Đáp án đúng*</label>
+                    <select id="qAnswer" required>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Giải thích chi tiết (Review Mode)</label>
+                    <textarea id="qExplanation" placeholder="Vì sao chọn đáp án này..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Transcript (Chỉ dành cho Listening)</label>
+                    <textarea id="qTranscript" placeholder="(A) He is... (B) She is..."></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-success" style="width: 100%;">LƯU CÂU HỎI</button>
+            </form>
+        </div>
+
+        <!-- List & Export -->
+        <div class="card">
+            <h2>Danh sách Câu hỏi đã lưu (<span id="qCount">0</span>/200)</h2>
+            <div class="form-group flex-row">
+                <button class="btn btn-danger" onclick="clearAll()">Xóa Toàn Bộ</button>
+                <button class="btn" onclick="generateCode()">Tạo File Code (test01.js)</button>
+            </div>
+            
+            <div class="export-section">
+                <textarea id="export-code" readonly placeholder="Mã code Javascript sẽ hiện ở đây... Copy và dán đè vào file data/test01.js"></textarea>
+                <button class="btn" style="width: 100%; margin-top: 5px;" onclick="copyCode()">Copy Code</button>
+            </div>
+
+            <h3 style="margin-top: 20px;">Review Danh sách:</h3>
+            <div class="question-list" id="qList">
+                <!-- Items list -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let questions = JSON.parse(localStorage.getItem('toeic_admin_q')) || [];
+
+        // UI Elements
+        const form = document.getElementById('q-form');
+        const qList = document.getElementById('qList');
+        const countSpan = document.getElementById('qCount');
+        
+        function renderList() {
+            qList.innerHTML = '';
+            // Sort by ID
+            questions.sort((a, b) => parseInt(a.id) - parseInt(b.id));
+            
+            questions.forEach((q, index) => {
+                const div = document.createElement('div');
+                div.className = 'q-item';
+                div.innerHTML = `
+                    <div class="q-item-details">
+                        <strong>Q${q.id} (Part ${q.part})</strong> - Đáp án: ${q.answer}
+                        <div style="font-size: 12px; color: #64748b; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 350px;">
+                            ${q.questionText}
+                        </div>
+                    </div>
+                    <div>
+                        <button class="btn" style="padding: 5px 10px;" onclick="editQ(${index})">Sửa</button>
+                        <button class="btn btn-danger" style="padding: 5px 10px;" onclick="deleteQ(${index})">Xóa</button>
+                    </div>
+                `;
+                qList.appendChild(div);
+            });
+            countSpan.textContent = questions.length;
+            localStorage.setItem('toeic_admin_q', JSON.stringify(questions));
+        }
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const q = {
+                id: parseInt(document.getElementById('qId').value),
+                part: parseInt(document.getElementById('qPart').value),
+                questionText: document.getElementById('qText').value,
+                options: [],
+                answer: document.getElementById('qAnswer').value
+            };
+
+            const optA = document.getElementById('optA').value;
+            const optB = document.getElementById('optB').value;
+            const optC = document.getElementById('optC').value;
+            const optD = document.getElementById('optD').value;
+
+            if(optA) q.options.push(optA);
+            if(optB) q.options.push(optB);
+            if(optC) q.options.push(optC);
+            if(optD) q.options.push(optD); // Part 2 might only have 3 options, so we push non-empty ones. 
+            // Wait, standard toeic Part 2 has 3 options. But our app expects indices. 
+            // Better to push them and our app handles length.
+            // Actually, for consistency, just push the non-empty values.
+            q.options = [optA, optB, optC, optD].filter(Boolean);
+
+            const groupId = document.getElementById('qGroupId').value.trim();
+            if(groupId) q.groupId = groupId;
+
+            const groupImage = document.getElementById('qGroupImage').value.trim();
+            if(groupImage) q.groupImage = groupImage;
+
+            const image = document.getElementById('qImage').value.trim();
+            if(image) q.image = image;
+
+            const passage = document.getElementById('qPassage').value.trim();
+            if(passage) q.passage = passage;
+
+            const explanation = document.getElementById('qExplanation').value.trim();
+            if(explanation) q.explanation = explanation;
+
+            const transcript = document.getElementById('qTranscript').value.trim();
+            if(transcript) q.transcript = transcript;
+
+            // Update if exists
+            const existingIndex = questions.findIndex(x => x.id === q.id);
+            if(existingIndex >= 0) {
+                questions[existingIndex] = q;
+            } else {
+                questions.push(q);
+            }
+
+            renderList();
+            
+            // Auto-increment ID for convenience
+            document.getElementById('qId').value = q.id + 1;
+        });
+
+        function deleteQ(index) {
+            if(confirm('Bạn có chắc muốn xóa câu này?')) {
+                questions.splice(index, 1);
+                renderList();
+            }
+        }
+
+        function editQ(index) {
+            const q = questions[index];
+            document.getElementById('qId').value = q.id;
+            document.getElementById('qPart').value = q.part;
+            document.getElementById('qGroupId').value = q.groupId || '';
+            document.getElementById('qText').value = q.questionText || '';
+            document.getElementById('qImage').value = q.image || '';
+            document.getElementById('qGroupImage').value = q.groupImage || '';
+            document.getElementById('qPassage').value = q.passage || '';
+            
+            document.getElementById('optA').value = q.options[0] || '';
+            document.getElementById('optB').value = q.options[1] || '';
+            document.getElementById('optC').value = q.options[2] || '';
+            document.getElementById('optD').value = q.options[3] || '';
+            
+            document.getElementById('qAnswer').value = q.answer;
+            document.getElementById('qExplanation').value = q.explanation || '';
+            document.getElementById('qTranscript').value = q.transcript || '';
+        }
+
+        function clearAll() {
+            if(confirm('CẢNH BÁO: Xoá toàn bộ dữ liệu đang nhập?')) {
+                questions = [];
+                renderList();
+            }
+        }
+
+        function generateCode() {
+            const dataObj = {
+                testName: "TOEIC Placement Test - ETS 2026 Test 01",
+                questions: questions
+            };
+            const jsCode = "window.TEST_DATA = " + JSON.stringify(dataObj, null, 2) + ";";
+            document.getElementById('export-code').value = jsCode;
+        }
+
+        function copyCode() {
+            const el = document.getElementById('export-code');
+            el.select();
+            document.execCommand('copy');
+            alert('Đã copy mã! Hãy mở file data/test01.js và Paste (Dán) đè lên nội dung cũ để lưu lại bài thi.');
+        }
+
+        // Init
+        renderList();
+    </script>
+</body>
+</html>

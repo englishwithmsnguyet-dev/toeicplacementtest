@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOEIC PLACEMENT TEST</title>
+    <!-- Change font to Roboto Serif Light -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:opsz,wght@8..144,300;8..144,400;8..144,500;8..144,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen" class="screen active glass-panel">
+        <div class="login-container">
+            <div class="logo">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="url(#gradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <defs>
+                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#3b82f6" />
+                            <stop offset="100%" stop-color="#8b5cf6" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>
+                </svg>
+            </div>
+            <h1>TOEIC PLACEMENT TEST</h1>
+            
+            <form id="login-form">
+                <div class="input-group">
+                    <label for="fullName">Họ và Tên</label>
+                    <input type="text" id="fullName" placeholder="Nhập họ và tên của bạn" required autocomplete="off">
+                </div>
+                <button type="submit" class="btn btn-primary">Bắt Đầu Làm Bài</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Test Screen -->
+    <div id="test-screen" class="screen">
+        <header class="test-header glass-panel">
+            <div class="header-left">
+                <div class="student-info">
+                    <span class="label">Thí sinh:</span>
+                    <span id="display-name" class="value"></span>
+                </div>
+            </div>
+            <div class="header-center" id="header-timer" style="display: none;">
+                <div class="timer" id="timer">02:00:00</div>
+            </div>
+            <div class="header-right" id="header-submit" style="display: none;">
+                <button id="btn-submit-test" class="btn btn-danger">Nộp Bài</button>
+            </div>
+        </header>
+
+        
+        <div class="test-container">
+            <!-- Left Content Area (PDF Viewer) -->
+            <main class="main-content glass-panel split-left">
+                <!-- Home Section -->
+                <div id="home-section" class="content-section active">
+                    <div class="home-content">
+                        <h2>Hướng Dẫn Thi Thử TOEIC</h2>
+                        <div class="instructions-card" style="padding-bottom: 10px;">
+                            <h3 style="font-size: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-bottom: 15px;">Cấu trúc bài thi TOEIC</h3>
+                            <p style="margin-bottom: 20px;">Bài thi TOEIC Placement Test mô phỏng kì thi thực tế, gồm 2 kỹ năng chính với tổng cộng 200 câu hỏi, thời gian làm bài 120 phút.</p>
+                            
+                            <div class="skill-detail" style="margin-bottom: 25px;">
+                                <h4 style="color: #3b82f6; margin-bottom: 12px; font-size: 17px;">1. LISTENING TEST (Nghe hiểu) - 100 câu / 45 phút</h4>
+                                <ul style="list-style-type: none; margin-left: 0; line-height: 1.6;">
+                                    <li style="margin-bottom: 12px;"><strong>Part 1: Photographs (Mô tả tranh) - 6 câu:</strong> Bạn sẽ xem 6 bức tranh. Mỗi tranh sẽ có 4 câu miêu tả bằng tiếng Anh được đọc lên. Nhiệm vụ của bạn là lắng nghe và chọn 1 câu miêu tả chính xác nhất về bức tranh đó.</li>
+                                    <li style="margin-bottom: 12px;"><strong>Part 2: Question-Response (Hỏi & Đáp) - 25 câu:</strong> Khá thử thách vì bạn không có sẵn chữ để đọc. Bạn sẽ nghe 1 câu hỏi, tiếp theo là 3 câu trả lời (A, B, C). Bạn cần chọn câu phản hồi hợp lý nhất.</li>
+                                    <li style="margin-bottom: 12px;"><strong>Part 3: Conversations (Đoạn hội thoại) - 39 câu:</strong> Bạn sẽ nghe các đoạn nói chuyện ngắn qua lại giữa 2-3 người. Sau mỗi đoạn, sẽ có 3 câu hỏi (kèm 4 đáp án A, B, C, D) để kiểm tra xem bạn nắm bắt được thông tin gì.</li>
+                                    <li style="margin-bottom: 12px;"><strong>Part 4: Talks (Bài nói ngắn) - 30 câu:</strong> Tương tự Part 3 nhưng chỉ có 1 người duy nhất độc thoại (thường là đọc bản tin, thông báo sự kiện, quảng cáo...). Mỗi bài nói cũng đi kèm 3 câu hỏi trắc nghiệm.</li>
+                                </ul>
+                            </div>
+
+                            <div class="skill-detail" style="margin-bottom: 10px;">
+                                <h4 style="color: #8b5cf6; margin-bottom: 12px; font-size: 17px;">2. READING TEST (Đọc hiểu) - 100 câu / 75 phút</h4>
+                                <ul style="list-style-type: none; margin-left: 0; line-height: 1.6;">
+                                    <li style="margin-bottom: 12px;"><strong>Part 5: Incomplete Sentences (Hoàn thành câu) - 30 câu:</strong> Mỗi câu hỏi sẽ bị khuyết 1 từ/cụm từ. Dựa vào kiến thức Ngữ pháp hoặc Từ vựng, bạn chọn 1 đáp án (A, B, C, D) điền vào chỗ trống sao cho câu đúng nghĩa nhất.</li>
+                                    <li style="margin-bottom: 12px;"><strong>Part 6: Text Completion (Điền đoạn văn) - 16 câu:</strong> Giống Part 5 nhưng các chỗ trống nằm trong một văn bản dài như bức thư hay email. Ngoài điền từ, sẽ có những câu yêu cầu bạn điền nguyên cả một câu dài sao cho mạch lạc.</li>
+                                    <li style="margin-bottom: 12px;"><strong>Part 7: Reading Comprehension (Đọc hiểu) - 54 câu:</strong> Phần tốn nhiều thời gian nhất. Bạn sẽ phải đọc hiểu các tài liệu thực tế (báo chí, quảng cáo, chuỗi email trao đổi...). Sẽ có đoạn đơn (chỉ đọc 1 văn bản) và đoạn kép/ba (phải đọc kết hợp 2-3 văn bản cùng lúc) để tìm ra câu trả lời đúng.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="test-modes" style="display: flex; gap: 15px; margin-top: 20px;">
+                            <button class="btn btn-primary" onclick="startTest('listening')" style="flex: 1;">🎧 Thi LISTENING (45p)</button>
+                            <button class="btn btn-primary" onclick="startTest('reading')" style="flex: 1; background-color: #8b5cf6;">📖 Thi READING (75p)</button>
+                            <button class="btn btn-danger" onclick="startTest('full')" style="flex: 1;">🏆 Thi FULL TEST (120p)</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PDF Viewer Section -->
+                <div id="pdf-section" class="content-section" >
+                    <div class="test-tabs">
+                        <button class="tab-btn active" id="tab-listening" onclick="switchSection('listening')">LISTENING TEST</button>
+                        <button class="tab-btn" id="tab-reading" onclick="switchSection('reading')">READING TEST</button>
+                    </div>
+                    <div id="pdf-viewer-container" style="flex: 1; width: 100%;">
+                        <object id="pdf-object" data="data/pdf/listening_test_01.pdf#toolbar=0&navpanes=0&scrollbar=1" type="application/pdf" width="100%" height="100%">
+                            <p>Trình duyệt của bạn không hỗ trợ xem PDF trực tiếp. <a href="data/pdf/listening_test_01.pdf">Tải xuống PDF</a>.</p>
+                        </object>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Right Answer Sheet Sidebar (Bubble Sheet) -->
+            <aside class="right-sidebar glass-panel split-right">
+                <div class="sidebar-header">
+                    <h3>Phiếu Trả Lời</h3>
+                </div>
+                
+                <div id="audio-container" class="audio-panel">
+                    <div class="audio-notice" style="color: #ef4444; font-weight: bold; font-size: 13px; text-align: center; margin-bottom: 8px;">
+                        BẤM VÀO ĐỂ NGHE. LƯU Ý CHỈ NGHE 1 LẦN DUY NHẤT.
+                    </div>
+                    <div class="audio-controls" style="text-align: center; margin-bottom: 15px;">
+                        <button id="btn-play-audio" class="btn btn-primary" style="width: 100%; border-radius: 20px; font-weight: bold; background-color: #3b82f6;">▶ BẤM ĐỂ NGHE AUDIO</button>
+                        <audio id="main-audio" controlsList="nodownload">
+                            <source src="media/LISTENING TEST 01.mp3" type="audio/mpeg">
+                            <source src="Audio/Final%20Thay%20Dinh%20Van%20LISTENING%20ETS%202026%20.mp3" type="audio/mpeg">
+                        </audio>
+                        <div id="audio-overlay" class="audio-overlay hidden">
+                            <p>Audio đã kết thúc.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bubble-sheet-container" id="bubble-sheet">
+                    <!-- Bubbles injected here -->
+                </div>
+            </aside>
+        </div>
+
+    
+
+    </div>
+    <!-- Result Modal -->
+    <div id="result-modal" class="modal">
+        <div class="modal-content glass-panel">
+            <h2>Kết Quả Bài Thi</h2>
+            <div class="result-details">
+                <p>Thí sinh: <strong id="res-student-name"></strong></p>
+                <div class="score-grid">
+                    <div class="score-box">
+                        <h3>Listening</h3>
+                        <p class="correct-count">Số câu đúng: <span id="res-l-correct"></span></p>
+                        <p class="score">Điểm: <span id="res-l-score" class="highlight"></span></p>
+                    </div>
+                    <div class="score-box">
+                        <h3>Reading</h3>
+                        <p class="correct-count">Số câu đúng: <span id="res-r-correct"></span></p>
+                        <p class="score">Điểm: <span id="res-r-score" class="highlight"></span></p>
+                    </div>
+                </div>
+                <div class="total-score">
+                    <h3>Tổng Điểm</h3>
+                    <p class="score highlight" id="res-total"></p>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button id="btn-review-test" class="btn btn-primary">Xem Lại Bài Thi</button>
+                <button id="btn-restart" class="btn btn-secondary">Thi Lại</button>
+                <button id="btn-go-home" class="btn btn-secondary">Về Trang Chủ</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="data/test01.js"></script>
+    <script src="js/app.js"></script>
+    
+    <!-- Signature -->
+    <a href="https://www.facebook.com/MsNguyetTOEIC" target="_blank" class="brand-signature">
+        ENGLISH WITH MISS NGUYET
+    </a>
+</body>
+</html>
