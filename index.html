@@ -12,17 +12,12 @@
     <!-- Login Screen -->
     <div id="login-screen" class="screen active glass-panel">
         <div class="login-container">
-            <div class="logo">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="url(#gradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <defs>
-                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#3b82f6" />
-                            <stop offset="100%" stop-color="#8b5cf6" />
-                        </linearGradient>
-                    </defs>
-                    <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>
-                </svg>
+            <div class="logo" style="margin-bottom: 14px;">
+                <div style="width: 80px; height: 80px; border-radius: 50%; overflow: hidden; margin: 0 auto; border: 3px solid #6366f1; box-shadow: 0 4px 16px rgba(99, 102, 241, 0.4);">
+                    <img src="miss_nguyet.jpg" alt="English with Miss Nguyet" style="width: 100%; height: 100%; object-fit: cover; object-position: center 20%; display: block;">
+                </div>
             </div>
+            <div style="font-size: 0.85rem; font-weight: 800; color: #6366f1; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px;">ENGLISH WITH MISS NGUYET</div>
             <h1>TOEIC PLACEMENT TEST</h1>
             
             <form id="login-form">
@@ -43,6 +38,9 @@
                     <span class="label">Thí sinh:</span>
                     <span id="display-name" class="value"></span>
                 </div>
+                <div id="tab-warning-badge" class="tab-badge" style="display: none;">
+                    ⚠️ Rời tab: <span id="tab-badge-count">0</span>
+                </div>
             </div>
             <div class="header-center" id="header-timer" style="display: none;">
                 <div class="timer" id="timer">02:00:00</div>
@@ -62,7 +60,10 @@
                         <h2>Hướng Dẫn Thi Thử TOEIC</h2>
                         <div class="instructions-card" style="padding-bottom: 10px;">
                             <h3 style="font-size: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-bottom: 15px;">Cấu trúc bài thi TOEIC</h3>
-                            <p style="margin-bottom: 20px;">Bài thi TOEIC Placement Test mô phỏng kì thi thực tế, gồm 2 kỹ năng chính với tổng cộng 200 câu hỏi, thời gian làm bài 120 phút.</p>
+                            <p style="margin-bottom: 15px;">Bài thi TOEIC Placement Test mô phỏng kì thi thực tế, gồm 2 kỹ năng chính với tổng cộng 200 câu hỏi, thời gian làm bài 120 phút.</p>
+                            <div class="test-rule-notice" style="background: rgba(239, 68, 68, 0.12); border-left: 4px solid #ef4444; padding: 10px 14px; border-radius: 6px; margin-bottom: 20px; font-size: 14px; color: #fca5a5; line-height: 1.5;">
+                                <strong>⚠️ Lưu ý quy chế thi:</strong> Hệ thống tự động phát hiện và ghi nhận số lần chuyển tab hoặc thu nhỏ trình duyệt khi đang làm bài. Vui lòng tập trung làm bài liên tục cho đến khi hoàn thành.
+                            </div>
                             
                             <div class="skill-detail" style="margin-bottom: 25px;">
                                 <h4 style="color: #3b82f6; margin-bottom: 12px; font-size: 17px;">1. LISTENING TEST (Nghe hiểu) - 100 câu / 45 phút</h4>
@@ -159,12 +160,33 @@
                     <h3>Tổng Điểm</h3>
                     <p class="score highlight" id="res-total"></p>
                 </div>
+                <div id="res-tab-switches" class="result-tab-switches" style="display: none;">
+                    ⚠️ Số lần rời màn hình thi: <strong id="res-tab-count">0</strong> lần
+                </div>
             </div>
             <div class="modal-actions">
                 <button id="btn-review-test" class="btn btn-primary">Xem Lại Bài Thi</button>
                 <button id="btn-restart" class="btn btn-secondary">Thi Lại</button>
                 <button id="btn-go-home" class="btn btn-secondary">Về Trang Chủ</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Tab Switch Warning Modal -->
+    <div id="tab-warning-modal" class="modal">
+        <div class="modal-content glass-panel tab-warning-box">
+            <div class="warning-icon-large">⚠️</div>
+            <h2 class="warning-title">CẢNH BÁO RỜI TAB THI</h2>
+            <p class="warning-text">
+                Hệ thống phát hiện bạn vừa rời khỏi màn hình làm bài thi!
+            </p>
+            <div class="warning-counter-pill">
+                Số lần vi phạm: <strong id="tab-modal-count">1</strong> lần
+            </div>
+            <p class="warning-subtext" id="tab-modal-subtext">
+                Hành vi chuyển tab đã được tự động ghi lại vào hệ thống báo cáo. Vui lòng tập trung và không rời màn hình khi đang làm bài.
+            </p>
+            <button id="btn-dismiss-tab-warning" class="btn btn-warning-confirm">Tôi Đã Hiểu Và Tiếp Tục Làm Bài</button>
         </div>
     </div>
 
