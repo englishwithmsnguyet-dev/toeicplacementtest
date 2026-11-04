@@ -7,7 +7,9 @@ const state = {
     timerInterval: null,
     testData: null,
     isReviewMode: false,
-    testMode: null // "listening", "reading", or "full"
+    testMode: null, // "listening", "reading", or "full"
+    tabSwitchCount: 0,
+    isTestRunning: false
 };
 
 // DOM Elements
@@ -59,6 +61,33 @@ function init() {
             audioOverlay.classList.remove('hidden');
         });
     }
+
+    // Dismiss tab switch warning modal
+    const btnDismissWarning = document.getElementById('btn-dismiss-tab-warning');
+    if (btnDismissWarning) {
+        btnDismissWarning.addEventListener('click', () => {
+            const warningModal = document.getElementById('tab-warning-modal');
+            if (warningModal) warningModal.classList.remove('active');
+        });
+    }
+
+    // Tab visibility change detection (anti-cheating)
+    document.addEventListener('visibilitychange', () => {
+        if (!state.isTestRunning || state.isReviewMode) return;
+
+        if (document.hidden) {
+            state.tabSwitchCount++;
+            updateTabBadge();
+            const timeRemaining = formatTimeRemaining(state.timeLeft);
+            sendToGoogleForm(state.studentName, `CẢNH BÁO: Rời tab làm bài lần thứ ${state.tabSwitchCount} (Thời gian còn: ${timeRemaining})`);
+            document.title = `⚠️ CẢNH BÁO: RỜI TAB LẦN ${state.tabSwitchCount}! - TOEIC TEST`;
+        } else {
+            document.title = 'TOEIC PLACEMENT TEST';
+            if (state.tabSwitchCount > 0) {
+                showTabWarningModal();
+            }
+        }
+    });
 }
 
 function handleLogin(e) {
@@ -78,6 +107,10 @@ function handleLogin(e) {
 
 window.startTest = function(mode) {
     state.testMode = mode;
+    state.tabSwitchCount = 0;
+    state.isTestRunning = true;
+    updateTabBadge();
+    
     document.getElementById('home-section').classList.remove('active');
     document.getElementById('pdf-section').classList.add('active');
     document.querySelector('.split-right').style.display = 'flex'; // Hiển thị phiếu trả lời
@@ -231,12 +264,19 @@ window.selectBubble = function(qId, option) {
 };
 
 function submitTest() {
+    state.isTestRunning = false;
     clearInterval(state.timerInterval);
+    
+    // Close tab warning modal if open
+    const warningModal = document.getElementById('tab-warning-modal');
+    if (warningModal) warningModal.classList.remove('active');
+    
     const results = calculateScore();
     
-    // Ghi nhận giờ thoát và nộp bài
+    // Ghi nhận giờ thoát và nộp bài kèm số lần rời tab
     const scoreStr = `L: ${results.listeningScore}, R: ${results.readingScore}, T: ${results.totalScore}`;
-    sendToGoogleForm(state.studentName, `Nộp bài thi (${state.testMode}) - Điểm: ${scoreStr}`);
+    const tabStr = state.tabSwitchCount > 0 ? ` - Rời tab: ${state.tabSwitchCount} lần` : ` - Rời tab: 0 lần`;
+    sendToGoogleForm(state.studentName, `Nộp bài thi (${state.testMode}) - Điểm: ${scoreStr}${tabStr}`);
     
     showResults(results);
 }
@@ -323,6 +363,18 @@ function showResults(results) {
     document.getElementById('res-r-score').textContent = results.readingScore;
     document.getElementById('res-total').textContent = results.totalScore;
     
+    // Display tab switch count in results
+    const tabSwitchesEl = document.getElementById('res-tab-switches');
+    const tabCountEl = document.getElementById('res-tab-count');
+    if (tabSwitchesEl && tabCountEl) {
+        if (state.tabSwitchCount > 0) {
+            tabCountEl.textContent = state.tabSwitchCount;
+            tabSwitchesEl.style.display = 'block';
+        } else {
+            tabSwitchesEl.style.display = 'none';
+        }
+    }
+
     resultModal.classList.add('active');
 }
 document.getElementById('btn-review-test').addEventListener('click', reviewTest);
@@ -330,13 +382,19 @@ document.getElementById('btn-restart').addEventListener('click', () => location.
 document.getElementById('btn-go-home').addEventListener('click', goHome);
 
 function goHome() {
-    // 1. Hide Result Modal
+    // 1. Hide Result Modal & Warning Modal
     resultModal.classList.remove('active');
+    const warningModal = document.getElementById('tab-warning-modal');
+    if (warningModal) warningModal.classList.remove('active');
     
     // 2. Reset State
     state.answers = {};
     state.isReviewMode = false;
     state.testMode = null;
+    state.isTestRunning = false;
+    state.tabSwitchCount = 0;
+    updateTabBadge();
+    document.title = 'TOEIC PLACEMENT TEST';
     clearInterval(state.timerInterval);
     
     // 3. Reset Audio
@@ -368,6 +426,66 @@ function goHome() {
     // 5. Reset Bubble Sheet text
     btnSubmit.innerText = 'Nộp Bài';
     btnSubmit.style.display = 'block';
+}
+
+// Tab Switch Anti-Cheat Helpers
+function updateTabBadge() {
+    const badge = document.getElementById('tab-warning-badge');
+    const countEl = document.getElementById('tab-badge-count');
+    if (badge && countEl) {
+        if (state.tabSwitchCount > 0) {
+            countEl.textContent = state.tabSwitchCount;
+            badge.style.display = 'inline-flex';
+        } else {
+            badge.style.display = 'none';
+        }
+    }
+}
+
+function showTabWarningModal() {
+    const warningModal = document.getElementById('tab-warning-modal');
+    const modalCount = document.getElementById('tab-modal-count');
+    const modalSubtext = document.getElementById('tab-modal-subtext');
+    if (warningModal && modalCount) {
+        modalCount.textContent = state.tabSwitchCount;
+        if (modalSubtext) {
+            if (state.tabSwitchCount >= 3) {
+                modalSubtext.innerHTML = `<span style="color: #ef4444; font-weight: bold;">⚠️ BẠN ĐÃ VI PHẠM RỜI TAB ${state.tabSwitchCount} LẦN!</span><br>Toàn bộ số lần chuyển tab đã được lưu và gửi kèm bài nộp về giáo viên để đánh giá tính hợp lệ của bài thi.`;
+            } else {
+                modalSubtext.innerHTML = `Hành vi chuyển tab đã được tự động ghi lại vào hệ thống báo cáo. Vui lòng tập trung và không rời màn hình khi đang làm bài.`;
+            }
+        }
+        warningModal.classList.add('active');
+        playWarningSound();
+    }
+}
+
+function playWarningSound() {
+    try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (AudioCtx) {
+            const ctx = new AudioCtx();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(520, ctx.currentTime);
+            osc.frequency.setValueAtTime(390, ctx.currentTime + 0.12);
+            gain.gain.setValueAtTime(0.2, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start();
+            osc.stop(ctx.currentTime + 0.35);
+        }
+    } catch(e) {}
+}
+
+function formatTimeRemaining(totalSec) {
+    if (totalSec <= 0) return "00:00:00";
+    const h = Math.floor(totalSec / 3600);
+    const m = Math.floor((totalSec % 3600) / 60);
+    const s = totalSec % 60;
+    return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
 }
 
 function reviewTest() {
