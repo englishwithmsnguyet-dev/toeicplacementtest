@@ -792,32 +792,47 @@ audio {
 /* Tabs in Split Screen */
 .test-tabs {
     display: flex;
-    background: rgba(255, 255, 255, 0.05);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    gap: 8px;
+    padding: 6px 8px;
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
+    margin: 10px 10px 14px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
 }
 
 .test-tabs .tab-btn {
     flex: 1;
-    padding: 15px;
+    padding: 10px 18px;
     background: transparent;
-    border: none;
-    color: #cbd5e1;
-    font-weight: 600;
-    font-size: 14px;
+    border: 1px solid transparent;
+    outline: none;
+    border-radius: 10px;
+    color: #94a3b8;
+    font-weight: 700;
+    font-size: 13.5px;
+    letter-spacing: 0.5px;
     cursor: pointer;
-    transition: all 0.3s ease;
-    border-bottom: 3px solid transparent;
+    transition: all 0.22s ease-in-out;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    white-space: nowrap;
+    -webkit-appearance: none;
+    appearance: none;
 }
 
 .test-tabs .tab-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
+    background: rgba(255, 255, 255, 0.08);
+    color: #f8fafc;
 }
 
 .test-tabs .tab-btn.active {
-    color: #3b82f6;
-    border-bottom: 3px solid #3b82f6;
-    background: rgba(59, 130, 246, 0.1);
+    background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35) !important;
+    transform: translateY(-1px);
 }
 
 /* Hide bubble groups when not active */
